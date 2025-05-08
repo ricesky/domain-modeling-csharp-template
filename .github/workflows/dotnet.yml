@@ -1,0 +1,31 @@
+name: .NET Test Workflow
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v3
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '6.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore src/DomainModeling/DomainModeling.sln
+
+      - name: Build project
+        run: dotnet build src/DomainModeling/DomainModeling.sln --no-restore
+
+      - name: Run tests
+        run: dotnet test src/DomainModeling/DomainModeling.sln --no-build --verbosity normal
